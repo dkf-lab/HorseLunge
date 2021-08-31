@@ -1,0 +1,7 @@
+name: HorseLunge
+version: ${project.version}
+main: me.dkflab.horselunge.HorseLunge
+api-version: 1.16
+commands:
+  lunge:
+    description: Lunges horse
