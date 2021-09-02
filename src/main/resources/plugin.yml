@@ -4,4 +4,8 @@ main: me.dkflab.horselunge.HorseLunge
 api-version: 1.16
 commands:
   lunge:
-    description: Lunges horse
+    description: Get lunge wand
+  horse:
+    description: Check horse food and water levels.
+  vaccine:
+    description: Remove illness from horse
