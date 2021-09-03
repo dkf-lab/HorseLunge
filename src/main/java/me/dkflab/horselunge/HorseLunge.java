@@ -78,7 +78,9 @@ public final class HorseLunge extends JavaPlugin implements CommandExecutor {
         }
         if (take) {
             if (!checkForBlockNearby(e.getLocation(), Material.WATER)) {
-                waterLevel -= 1;
+                if (!checkForBlockNearby(e.getLocation(), Material.CAULDRON)) {
+                    waterLevel -= 1;
+                }
             }
         }
         // apply potion effects
@@ -106,7 +108,9 @@ public final class HorseLunge extends JavaPlugin implements CommandExecutor {
         }
         if (take) {
             if (!checkForBlockNearby(e.getLocation(), Material.HAY_BLOCK)) {
-                foodLevel -= 1;
+                if (!checkForBlockNearby(e.getLocation(), Material.GRASS_BLOCK)) {
+                    foodLevel -= 1;
+                }
             }
         }
         // apply potion effects
@@ -247,19 +251,31 @@ public final class HorseLunge extends JavaPlugin implements CommandExecutor {
                     // /horse test
                     if (args[0].equals("test")) {
                         if (checkForBlockNearby(p.getLocation(), Material.HAY_BLOCK)) {
-                            sendMessage(p, "&aWheat detected!");
+                            sendMessage(p, "&aFood detected!");
                         } else {
-                            sendMessage(p, "&cWheat not detected!");
+                            if (checkForBlockNearby(p.getLocation(), Material.GRASS_BLOCK)) {
+                                sendMessage(p, "&aFood detected!");
+                                return true;
+                            }
+                            sendMessage(p, "&cFood not detected!");
                         }
                         if (checkForBlockNearby(p.getLocation(), Material.WATER)) {
                             sendMessage(p, "&aWater detected!");
                         } else {
+                            if (checkForBlockNearby(p.getLocation(), Material.CAULDRON)) {
+                                sendMessage(p, "&aWater detected!");
+                                return true;
+                            }
                             sendMessage(p, "&cWater not detected!");
                         }
                         return true;
                     }
                     if (args[0].equals("status")) {
                         checkStatusOfHorse(p);
+                        return true;
+                    }
+                    if (args[0].equals("vaccine")) {
+                        vaccine(p);
                         return true;
                     }
                     // /horse sick <illness>
@@ -321,30 +337,35 @@ public final class HorseLunge extends JavaPlugin implements CommandExecutor {
         if (cmd.getName().equalsIgnoreCase("vaccine")) {
             if (sender instanceof Player) {
                 Player p = (Player)sender;
-                if (p.isInsideVehicle()) {
-                    String s = p.getVehicle().getType().toString();
-                    if (s.substring(0,5).equals("HORSE")) {
-                        if (p.hasPermission("horse.vaccine")) {
-                            LivingEntity horse = (LivingEntity)p.getVehicle();
-                            horse.removePotionEffect(PotionEffectType.SLOW);
-                            illness.put(horse, null);
-                            jab.put(horse, true);
-                            sendMessage(p, "&aVaccine success!");
-                        } else {
-                            sendMessage(p, "&cInsufficient permissions.");
-                        }
-
-                    }else {
-                        sendMessage(p, "&cYou need to be riding a horse!");
-                    }
+                vaccine(p);
                 } else {
-                    sendMessage(p, "&cYou need to be riding a horse!");
+                    sendMessage(sender, "&cYou need to be riding a horse!");
                 }
             } else {
                 sendMessage(sender, "&cYou need to be a player!");
             }
-        }
         return true;
+        }
+
+
+    public void vaccine(Player p) {
+        if (p.isInsideVehicle()) {
+            String s = p.getVehicle().getType().toString();
+            if (s.substring(0, 5).equals("HORSE")) {
+                if (p.hasPermission("horse.vaccine")) {
+                    LivingEntity horse = (LivingEntity) p.getVehicle();
+                    horse.removePotionEffect(PotionEffectType.SLOW);
+                    illness.put(horse, null);
+                    jab.put(horse, true);
+                    sendMessage(p, "&aVaccine success!");
+                } else {
+                    sendMessage(p, "&cInsufficient permissions.");
+                }
+
+            } else {
+                sendMessage(p, "&cYou need to be riding a horse!");
+            }
+        }
     }
 
     public void checkStatusOfHorse(Player p) {
