@@ -354,11 +354,6 @@ public final class HorseLunge extends JavaPlugin implements CommandExecutor {
             if (s.substring(0, 5).equals("HORSE")) {
                 if (p.hasPermission("horse.vaccine")) {
                     LivingEntity horse = (LivingEntity) p.getVehicle();
-                    if (illness.get(horse) == null) {
-                        // horse is not sick
-                        sendMessage(p, "&cYour horse is not sick!");
-                        return;
-                    }
                     horse.removePotionEffect(PotionEffectType.SLOW);
                     illness.put(horse, null);
                     jab.put(horse, true);
