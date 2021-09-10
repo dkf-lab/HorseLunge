@@ -14,6 +14,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
+import static me.dkflab.horselunge.Utils.*;
+
 public class Interact implements Listener {
 
     private HorseLunge main;
@@ -25,7 +27,7 @@ public class Interact implements Listener {
     @EventHandler
     public void onInteract(PlayerInteractEntityEvent e) {
         String s = e.getRightClicked().getType().toString();
-        if (s.substring(0,5).equals("HORSE")) {
+        if (s.substring(0,5).equalsIgnoreCase("HORSE")||s.substring(0,5).equalsIgnoreCase("Craft")) {
             Player p = e.getPlayer();
             Entity horse = e.getRightClicked();
             LivingEntity le = (LivingEntity)horse;
@@ -39,8 +41,8 @@ public class Interact implements Listener {
             if (item.getType().equals(Material.WATER_BUCKET)) {
                 e.setCancelled(true);
                 p.getInventory().setItemInMainHand(new ItemStack(Material.BUCKET, 1));
-                main.sendMessage(p, "&aYour horses' thirst has been fulfilled!");
-                main.setWaterLevel(horse, 5);
+                sendMessage(p, "&aYour horses' thirst has been fulfilled!");
+                main.foodWaterManager.setWaterLevel(horse, 5);
                 return;
             }
             // feeding
@@ -48,25 +50,27 @@ public class Interact implements Listener {
                 e.setCancelled(true);
                 item.setAmount(item.getAmount()-1);
                 p.getInventory().setItemInMainHand(item);
-                main.setFoodLevel(horse, 5);
-                main.sendMessage(p, "&aYour horses' appetite has been fulfilled!");
+                main.foodWaterManager.setFoodLevel(horse, 5);
+                sendMessage(p, "&aYour horses' appetite has been fulfilled!");
                 return;
             }
+            // remove all potion effects
+            removePotionEffects(le);
             // check food, water
-            main.removeSlow(horse);
-            main.checkFoodLevel(horse, false);
-            main.checkWaterLevel(horse, false);
+            main.illnessManager.removeIllnessEffects(horse);
+            main.foodWaterManager.checkFoodLevel(horse);
+            main.foodWaterManager.checkWaterLevel(horse);
             // message
-            if (main.foodLevel(horse) == 1) {
-                main.sendMessage(p, "&4Your horse is critically low on food!");
-                main.sendMessage(p, "&4It's speed will be impacted.");
+            if (main.foodWaterManager.foodLevel(horse) == 1) {
+                sendMessage(p, "&4Your horse is critically low on food!");
+                sendMessage(p, "&4It's speed will be impacted.");
             }
-            if (main.waterLevel(horse) == 1) {
-                main.sendMessage(p, "&4Your horse is critically low on water!");
-                main.sendMessage(p, "&4It's speed will be impacted.");
+            if (main.foodWaterManager.waterLevel(horse) == 1) {
+                sendMessage(p, "&4Your horse is critically low on water!");
+                sendMessage(p, "&4It's speed will be impacted.");
             }
             // sickness
-            main.illnessRoll(horse, p);
+            main.illnessManager.illnessRoll(horse, p);
         }
     }
 
@@ -80,11 +84,11 @@ public class Interact implements Listener {
         if (main.lungeMap().containsKey(e.getPlayer())) {
             // player deactivating
             main.lungeMap().remove(e.getPlayer());
-            main.sendMessage(e.getPlayer(), "&cDeactivated Lunging!");
+            sendMessage(e.getPlayer(), "&cDeactivated Lunging!");
         } else {
 
             Entity horse = e.getRightClicked();
-            main.sendMessage(e.getPlayer(), "&aActivated Lunging!");
+            sendMessage(e.getPlayer(), "&aActivated Lunging!");
             followPlayer(e.getPlayer(), horse, 1);
             main.lungeMap().put(e.getPlayer(), horse);
         }
@@ -114,13 +118,13 @@ public class Interact implements Listener {
     }
 
     public Location getLocationAroundCircle(Location center, double radius, double angleInRadian, Location player) {
-        if (main.randomNumber(0, 2) == 0) {
+        if (randomNumber(0, 2) == 0) {
             radius += 0.2;
         }
-        if (main.randomNumber(0, 2) == 1) {
+        if (randomNumber(0, 2) == 1) {
             radius += 0.5;
         }
-        if (main.randomNumber(0, 2)==2) {
+        if (randomNumber(0, 2)==2) {
             radius += 0.7;
         }
         double x = center.getX() + radius * Math.cos(angleInRadian);

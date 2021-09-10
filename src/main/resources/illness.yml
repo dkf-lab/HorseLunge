@@ -1,0 +1,20 @@
+# Default Illness Config
+# MAKE SURE TO READ THE CONSOLE TO CHECK FOR ERRORS!!!!!
+illnesses:
+  slowvid:
+    # Name of illness for formatted text
+    name: "Slowvid-19"
+    # Percentage chance of horse getting it
+    percentage: 5
+    # prevent illness from recurring again
+    preventReccuring: true
+    # You'll get an error in console if this is not recognised
+    potionEffectType: "SLOW"
+    # Multiplier of potion effect
+    multiplier: 3
+    # Command to vaccinate horse.
+    # Keep in mind it will be after /vaccine, for example
+    # /vaccine slowvid
+    command: "slowvid"
+    # Permission for vaccine command
+    permission: "horse.vaccine.covid"

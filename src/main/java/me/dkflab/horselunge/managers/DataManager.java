@@ -1,5 +1,6 @@
-package me.dkflab.horselunge;
+package me.dkflab.horselunge.managers;
 
+import me.dkflab.horselunge.HorseLunge;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 

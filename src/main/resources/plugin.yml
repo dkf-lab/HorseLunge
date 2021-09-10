@@ -9,3 +9,5 @@ commands:
     description: Check horse food and water levels.
   vaccine:
     description: Remove illness from horse
+  tempdebug:
+    description: No need.
