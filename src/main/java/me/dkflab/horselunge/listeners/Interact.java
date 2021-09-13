@@ -56,8 +56,8 @@ public class Interact implements Listener {
             }
             // remove all potion effects
             removePotionEffects(le);
-            // check food, water
             main.illnessManager.removeIllnessEffects(horse);
+            // check food, water
             main.foodWaterManager.checkFoodLevel(horse);
             main.foodWaterManager.checkWaterLevel(horse);
             // message
@@ -71,6 +71,8 @@ public class Interact implements Listener {
             }
             // sickness
             main.illnessManager.illnessRoll(horse, p);
+            main.illnessManager.deathRoll(horse);
+            main.illnessManager.selfCureRoll(horse);
         }
     }
 

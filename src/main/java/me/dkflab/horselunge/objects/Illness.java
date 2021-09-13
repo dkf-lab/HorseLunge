@@ -6,8 +6,8 @@ import org.bukkit.potion.PotionEffectType;
 public class Illness {
 
     private PotionEffectType potionEffect;
-    private int percentage,multiplier;
-    private boolean preventReccuring;
+    private int percentage,multiplier,deathChance,selfCureChance,treatmentTime;
+    private boolean preventReccuring,requireIllness;
     private String command,permission,name;
 
     public Illness(final ConfigurationSection section, final String name) {
@@ -19,6 +19,10 @@ public class Illness {
         this.multiplier = section.getInt("multiplier");
         this.command = section.getString("command");
         this.permission = section.getString("permission");
+        this.deathChance = section.getInt("deathChance");
+        this.selfCureChance = section.getInt("selfCureChance");
+        this.requireIllness = section.getBoolean("requireIllness");
+        this.treatmentTime = section.getInt("cureTime");
     }
 
     public String getName() {
@@ -37,6 +41,10 @@ public class Illness {
         return this.preventReccuring;
     }
 
+    public boolean requireIllness() {
+        return this.requireIllness;
+    }
+
     public int getMultiplier() {
         return this.multiplier;
     }
@@ -47,5 +55,17 @@ public class Illness {
 
     public String getPermission() {
         return this.permission;
+    }
+
+    public int getChanceOfDeath() {
+        return this.deathChance;
+    }
+
+    public int getSelfCureChance() {
+        return this.selfCureChance;
+    }
+
+    public int getTreatmentTime() {
+        return this.treatmentTime;
     }
 }

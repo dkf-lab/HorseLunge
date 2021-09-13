@@ -8,13 +8,27 @@ illnesses:
     percentage: 5
     # prevent illness from recurring again
     preventReccuring: true
+    # Require illness to do treatment.
+    requireIllness: false
+    # contagious toggles
+    contagious: false
+    contagiousPercentageIncrease: 1
+    # activity
+    activity: false
     # You'll get an error in console if this is not recognised
+    # Choose from https://hub.spigotmc.org/javadocs/spigot/org/bukkit/potion/PotionEffectType.html
     potionEffectType: "SLOW"
     # Multiplier of potion effect
     multiplier: 3
-    # Command to vaccinate horse.
-    # Keep in mind it will be after /vaccine, for example
-    # /vaccine slowvid
+    # Chance of death when right clicking on a horse with an illness.
+    deathChance: 1
+    # Chance of self-cure when right clicking on a horse with an illness.
+    selfCureChance: 1
+    # How long (in minutes) it takes for treatment to stop working.
+    treatmentTime: 10
+    # Command to treat horse.
+    # Keep in mind it will be after /treatment, for example
+    # /treatment slowvid
     command: "slowvid"
-    # Permission for vaccine command
-    permission: "horse.vaccine.covid"
+    # Permission for treatment command
+    permission: "horse.treatment.covid"

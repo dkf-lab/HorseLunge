@@ -7,7 +7,5 @@ commands:
     description: Get lunge wand
   horse:
     description: Check horse food and water levels.
-  vaccine:
+  treatment:
     description: Remove illness from horse
-  tempdebug:
-    description: No need.

@@ -35,8 +35,7 @@ public final class HorseLunge extends JavaPlugin {
         commands = new CommandListener(this);
         getCommand("lunge").setExecutor(commands);
         getCommand("horse").setExecutor(commands);
-        getCommand("vaccine").setExecutor(commands);
-        getCommand("tempdebug").setExecutor(commands);
+        getCommand("treatment").setExecutor(commands);
         lead = new ItemStack(Material.SLIME_BALL);
         ItemMeta meta = lead.getItemMeta();
         meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&6&lLunging Lead"));
@@ -48,6 +47,12 @@ public final class HorseLunge extends JavaPlugin {
         illnessManager = new IllnessManager(this);
         illnessManager.onEnable();
         // Timers
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                illnessManager.checkTreatmentTime();
+            }
+        }.runTaskTimer(this, 0L, 20); // every second
         new BukkitRunnable() {
             @Override
             public void run() {
@@ -73,7 +78,6 @@ public final class HorseLunge extends JavaPlugin {
             Entity horse = p.getVehicle();
             if (s.substring(0,5).equals("HORSE")) {
                 foodWaterManager.messagePlayerFoodWaterLevels(p, horse, false);
-                // TODO: Check for illness/vaccines here!
                 // Illnesses
                 if (illnessManager.getHorseIllnesses(horse) != null) {
                     for (Illness illness : illnessManager.getHorseIllnesses(horse)) {
@@ -81,6 +85,13 @@ public final class HorseLunge extends JavaPlugin {
                     }
                 }
                 // Vaccines
+                if (illnessManager.getHorseVaccines(horse) != null) {
+                    for (Illness illness : illnessManager.getHorseVaccines(horse)) {
+                        if (illness.preventReccurring()) {
+                            sendMessage(p, "&7Your horse is treated against &c" + illness.getName() + "&7!");
+                        }
+                    }
+                }
             } else {
                 sendMessage(p, "&cYou need to be riding a horse!");
             }
